@@ -1,0 +1,52 @@
+name: Build Windows release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Build standalone GUI executable
+        run: python -m PyInstaller --clean --noconfirm Norex.spec
+
+      - name: Verify executable starts
+        shell: pwsh
+        run: |
+          $process = Start-Process -FilePath "dist/NOREX.exe" -PassThru
+          Start-Sleep -Seconds 5
+          $process.Refresh()
+          if ($process.HasExited) {
+            throw "NOREX.exe exited during the startup check (exit code $($process.ExitCode))."
+          }
+          Stop-Process -Id $process.Id
+
+      - name: Upload executable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NOREX-Windows
+          path: dist/NOREX.exe
+          if-no-files-found: error
+
+      - name: Publish executable to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/NOREX.exe

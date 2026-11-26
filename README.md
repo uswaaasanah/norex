@@ -24,7 +24,7 @@ Pasang dependensi dengan pip:
 python -m pip install customtkinter matplotlib numpy sympy
 ```
 
-Berkas `requirements.txt` yang tersedia saat ini mencantumkan `customtkinter`, `matplotlib`, dan `sympyp`. Nama paket terakhir tampaknya salah ketik dari `sympy`. Selain itu, aplikasi menggunakan `numpy`, tetapi paket tersebut belum tercantum di berkas tersebut. Perintah instalasi di atas mencantumkan paket yang diimpor langsung oleh kode.
+Berkas `requirements.txt` mencantumkan dependensi runtime aplikasi serta PyInstaller untuk proses build executable.
 
 ## Menjalankan aplikasi
 
@@ -35,6 +35,21 @@ python Norex.py
 ```
 
 Aplikasi ini tidak menyediakan antarmuka baris perintah. Modul solver juga dapat diimpor dan dipanggil dari program Python lain; lihat bagian [Modul solver](#modul-solver).
+
+## Membuat executable Windows (`.exe`)
+
+File [`Norex.py`](Norex.py) adalah titik masuk aplikasi. Konfigurasi [`Norex.spec`](Norex.spec) mengemas modul solver lokal (`biseksi2.py`, `newraph1.py`, `regulaf1.py`, dan `secant1.py`), aset CustomTkinter, serta dependensi aplikasi menjadi satu executable tanpa jendela konsol.
+
+Untuk membangun executable di Windows, pasang Python 3.12, buka PowerShell di direktori repositori, lalu jalankan:
+
+```powershell
+python -m pip install -r requirements.txt
+python -m PyInstaller --clean --noconfirm Norex.spec
+```
+
+Hasilnya adalah `dist\NOREX.exe`. Salin atau distribusikan file itu; pengguna Windows dapat menjalankannya tanpa memasang Python. Build harus dijalankan di Windows karena PyInstaller membuat executable untuk sistem operasi tempat proses build berjalan.
+
+Workflow GitHub Actions [`.github/workflows/windows-release.yml`](.github/workflows/windows-release.yml) membangun dan memeriksa executable pada runner Windows. Jalankan workflow secara manual untuk mendapatkan artifact `NOREX-Windows`, atau dorong tag versi seperti `v1.0.0` untuk membuat GitHub Release yang menyertakan `NOREX.exe`. Pemeriksaan startup di CI memastikan proses tetap berjalan selama beberapa detik setelah diluncurkan.
 
 ## Menggunakan antarmuka
 
@@ -89,7 +104,7 @@ Riwayat iterasi dapat kosong jika salah satu batas interval sudah merupakan akar
 - [`regulaf1.py`](regulaf1.py) — implementasi metode Regula Falsi.
 - [`newraph1.py`](newraph1.py) — implementasi metode Newton-Raphson.
 - [`secant1.py`](secant1.py) — implementasi metode secant.
-- [`requirements.txt`](requirements.txt) — daftar dependensi; lihat catatan tentang isinya di atas.
+- [`requirements.txt`](requirements.txt) — daftar dependensi runtime dan build.
 
 ## Catatan dan keterbatasan
 

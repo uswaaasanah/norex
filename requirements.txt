@@ -1,3 +1,5 @@
 customtkinter
 matplotlib
-sympyp
+numpy
+sympy
+pyinstaller
