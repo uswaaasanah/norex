@@ -1,4 +1,4 @@
-# NOREX — Penjelajah Akar Nonlinear
+# NOREX
 
 NOREX adalah aplikasi desktop untuk mempelajari metode numerik yang memperkirakan akar real dari fungsi, yaitu nilai `x` yang memenuhi `f(x) = 0`. Antarmuka CustomTkinter memungkinkan pengguna memilih metode, memasukkan parameter, lalu melihat perkiraan akar, tabel iterasi, dan grafik fungsi beserta titik-titik iterasi.
 
