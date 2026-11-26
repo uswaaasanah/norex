@@ -1,101 +1,101 @@
-# NOREX — Nonlinear Root Explorer
+# NOREX — Penjelajah Akar Nonlinear
 
-NOREX is a desktop application for exploring numerical methods that approximate real roots of a user-supplied function, that is, values of `x` for which `f(x) = 0`. Its CustomTkinter interface lets you choose a method, enter parameters, and inspect the estimated root, iteration table, and a graph of the function with the iteration points.
+NOREX adalah aplikasi desktop untuk mempelajari metode numerik yang memperkirakan akar real dari fungsi, yaitu nilai `x` yang memenuhi `f(x) = 0`. Antarmuka CustomTkinter memungkinkan pengguna memilih metode, memasukkan parameter, lalu melihat perkiraan akar, tabel iterasi, dan grafik fungsi beserta titik-titik iterasi.
 
-The interface labels are in Indonesian. The method names shown in the application are **Biseksi** (bisection), **Regula Falsi** (false position), **Newton-Raphson**, and **Secant**.
+Antarmuka aplikasi menggunakan bahasa Indonesia. Metode yang tersedia adalah **Biseksi**, **Regula Falsi**, **Newton-Raphson**, dan **Secant**.
 
-## Features
+## Fitur
 
-- Enter a symbolic function of `x`.
-- Choose one of four root-finding methods.
-- Set an initial point or interval and a tolerance.
-- View the estimated root and per-iteration values.
-- View the function curve and the method's iteration points in an embedded Matplotlib plot.
+- Memasukkan fungsi simbolik dengan variabel `x`.
+- Memilih salah satu dari empat metode pencarian akar.
+- Menentukan nilai awal atau interval serta toleransi.
+- Melihat perkiraan akar dan nilai pada setiap iterasi.
+- Melihat kurva fungsi dan titik iterasi pada grafik Matplotlib di dalam aplikasi.
 
-## Requirements
+## Persyaratan
 
 - Python 3
-- A working desktop display and Tk support (Tkinter is included with many Python distributions; on some Linux distributions it must be installed separately).
-- The Python packages `customtkinter`, `matplotlib`, `numpy`, and `sympy`.
+- Layar desktop dan dukungan Tk (Tkinter tersedia di banyak distribusi Python, tetapi pada beberapa distribusi Linux perlu dipasang secara terpisah).
+- Paket Python `customtkinter`, `matplotlib`, `numpy`, dan `sympy`.
 
-Install the dependencies with pip:
+Pasang dependensi dengan pip:
 
 ```bash
 python -m pip install customtkinter matplotlib numpy sympy
 ```
 
-The checked-in `requirements.txt` currently lists `customtkinter`, `matplotlib`, and `sympyp`. The latter appears to be a misspelling of the package name `sympy`, and `numpy` is also used by the application but is not listed there. The install command above names the packages the code imports directly.
+Berkas `requirements.txt` yang tersedia saat ini mencantumkan `customtkinter`, `matplotlib`, dan `sympyp`. Nama paket terakhir tampaknya salah ketik dari `sympy`. Selain itu, aplikasi menggunakan `numpy`, tetapi paket tersebut belum tercantum di berkas tersebut. Perintah instalasi di atas mencantumkan paket yang diimpor langsung oleh kode.
 
-## Run the application
+## Menjalankan aplikasi
 
-Run the GUI from the repository root so Python can find the solver modules:
+Jalankan antarmuka grafis dari direktori utama repositori agar Python dapat menemukan modul-modul solver:
 
 ```bash
 python Norex.py
 ```
 
-There is no command-line interface. The solver modules can also be imported and called from another Python program; see [Solver modules](#solver-modules).
+Aplikasi ini tidak menyediakan antarmuka baris perintah. Modul solver juga dapat diimpor dan dipanggil dari program Python lain; lihat bagian [Modul solver](#modul-solver).
 
-## Using the GUI
+## Menggunakan antarmuka
 
-1. Type a function of `x` into **Masukkan Fungsi f(x)**. For example, `x**2 - 2`.
-2. Choose a method from **PILIH METODE**.
-3. Enter the required starting value(s) and tolerance in the fields that appear.
-4. Select **HITUNG**.
-5. Read the approximate root under **Penyelesaian**, inspect **DATA ITERASI**, and review the plotted function and iteration points under **GRAFIK**.
+1. Masukkan fungsi terhadap `x` pada **Masukkan Fungsi f(x)**. Contoh: `x**2 - 2`.
+2. Pilih metode pada **PILIH METODE**.
+3. Masukkan nilai awal atau batas interval dan toleransi pada kolom yang muncul.
+4. Klik **HITUNG**.
+5. Lihat perkiraan akar di bagian **Penyelesaian**, periksa tabel **DATA ITERASI**, dan amati grafik fungsi serta titik iterasinya di bagian **GRAFIK**.
 
-Use Python/SymPy expression syntax: write powers with `**` (for example, `x**3 - 2*x - 5`) and use explicit multiplication (for example, `2*x`). The expression must be parseable by SymPy and evaluable as a real number at the points visited by the selected method. The graph is sampled with NumPy over a range based on the iteration points.
+Gunakan sintaks ekspresi Python/SymPy: tulis pangkat dengan `**` (contoh: `x**3 - 2*x - 5`) dan tuliskan perkalian secara eksplisit (contoh: `2*x`). Ekspresi harus dapat dibaca oleh SymPy dan menghasilkan bilangan real pada titik-titik yang dikunjungi metode yang dipilih. Grafik mengambil sampel menggunakan NumPy pada rentang yang ditentukan berdasarkan titik iterasi.
 
-### Parameters by method
+### Parameter setiap metode
 
-| GUI method | Required values | How the values are used |
+| Metode pada aplikasi | Nilai yang diperlukan | Penggunaan nilai |
 | --- | --- | --- |
-| Biseksi | Lower bound `a`, upper bound `b`, tolerance `e` | Repeatedly halves the bracket. The starting endpoints must bracket a root (their function values have opposite signs, or an endpoint is itself a root). |
-| Regula Falsi | Lower bound `a`, upper bound `b`, tolerance `e` | Uses a line through the endpoint function values to estimate the next point. The implementation requires a sign-changing interval, or a root at an endpoint. |
-| Newton-Raphson | Initial value `a`, tolerance `e` | Uses the derivative of the function and starts from `a`. The `b` field is not used. The derivative must be nonzero at each point where an update is needed. |
-| Secant | Two initial values `a` and `b`, tolerance `e` | Uses the last two points to estimate the next point. The implementation checks that the initial function values bracket a root, even though this condition is not generally required by the secant method. |
+| Biseksi | Batas bawah `a`, batas atas `b`, toleransi `e` | Membagi dua interval secara berulang. Nilai fungsi pada kedua ujung harus berbeda tanda, atau salah satu ujung merupakan akar. |
+| Regula Falsi | Batas bawah `a`, batas atas `b`, toleransi `e` | Menggunakan garis yang menghubungkan nilai fungsi di kedua ujung untuk memperkirakan titik berikutnya. Implementasi mensyaratkan interval dengan perubahan tanda, atau akar pada salah satu ujung. |
+| Newton-Raphson | Nilai awal `a`, toleransi `e` | Menggunakan turunan fungsi dan memulai dari `a`. Kolom `b` tidak digunakan. Turunan harus bukan nol pada setiap titik yang memerlukan pembaruan. |
+| Secant | Dua nilai awal `a` dan `b`, toleransi `e` | Menggunakan dua titik terakhir untuk memperkirakan titik berikutnya. Implementasi memeriksa bahwa nilai fungsi pada titik awal mengurung akar, walaupun syarat ini umumnya tidak diperlukan oleh metode secant. |
 
-The tolerance must be positive. In the current implementations, bisection stops when the bracket width is at most `e`. Regula Falsi, Newton-Raphson, and Secant stop when the absolute function value at the latest point is at most `e` (a residual criterion). These are different error measures; the tolerance is not a guaranteed bound on the distance from the reported estimate to the exact root.
+Toleransi harus lebih besar dari nol. Pada implementasi saat ini, biseksi berhenti ketika lebar interval kurang dari atau sama dengan `e`. Regula Falsi, Newton-Raphson, dan Secant berhenti ketika nilai mutlak fungsi pada titik terbaru kurang dari atau sama dengan `e` (kriteria residu). Ukuran galat yang digunakan berbeda-beda; toleransi bukan jaminan batas jarak antara perkiraan yang dilaporkan dan akar eksak.
 
-The solvers do not impose a maximum iteration count. Choose valid starting values and a suitable tolerance; methods may fail to converge or may encounter a zero denominator/derivative or an expression that cannot be evaluated. A function can have multiple roots, and the result depends on its initial value(s) or interval.
+Solver tidak membatasi jumlah iterasi. Gunakan nilai awal yang sesuai dan toleransi yang wajar. Metode dapat gagal konvergen atau menemui penyebut/turunan nol maupun ekspresi yang tidak dapat dihitung. Fungsi dapat memiliki beberapa akar, dan hasilnya bergantung pada nilai awal atau interval yang diberikan.
 
-## Solver modules
+## Modul solver
 
-Each module defines a function that accepts the function as a string and returns `(root, iterations)`, where `root` is the computed estimate and `iterations` is a list of dictionaries. Values in each dictionary are numeric and keyed as shown below. The modules use SymPy to parse and evaluate the expression.
+Setiap modul menyediakan fungsi yang menerima fungsi dalam bentuk teks dan mengembalikan `(akar, iterasi)`. `akar` adalah nilai perkiraan yang dihitung, sedangkan `iterasi` adalah daftar kamus yang berisi data numerik dengan kunci seperti yang dijelaskan di bawah. Modul menggunakan SymPy untuk membaca dan menghitung ekspresi.
 
-| File | Public function | Parameters | Method |
+| Berkas | Fungsi publik | Parameter | Metode |
 | --- | --- | --- | --- |
-| [`biseksi2.py`](biseksi2.py) | `biseksi(fungsi, a, b, e)` | Expression string, interval endpoints, tolerance | Bisection; iteration records include the updated `a`, `b`, midpoint `x_baru`, `f(x_baru)`, and `eror`. Its `eror` is interval width. |
-| [`regulaf1.py`](regulaf1.py) | `regulafalsi(fungsi, a, b, e)` | Expression string, interval endpoints, tolerance | Regula Falsi / false position; records include updated endpoints, estimated point, function value, and residual `eror`. |
-| [`newraph1.py`](newraph1.py) | `newraph(fungsi, a, e)` | Expression string, initial point, tolerance | Newton-Raphson; derives `f'(x)` symbolically. Records include `x_baru`, `f(x_baru)`, `f'(x_baru)`, and residual `eror`. |
-| [`secant1.py`](secant1.py) | `secant(fungsi, a, b, e)` | Expression string, two initial points, tolerance | Secant; records include `x_baru`, `f(x_baru)`, and residual `eror`. |
+| [`biseksi2.py`](biseksi2.py) | `biseksi(fungsi, a, b, e)` | Teks ekspresi, batas interval, toleransi | Biseksi; data iterasi mencakup nilai `a` dan `b` yang diperbarui, titik tengah `x_baru`, `f(x_baru)`, dan `eror`. Nilai `eror` adalah lebar interval. |
+| [`regulaf1.py`](regulaf1.py) | `regulafalsi(fungsi, a, b, e)` | Teks ekspresi, batas interval, toleransi | Regula Falsi; data iterasi mencakup batas yang diperbarui, titik perkiraan, nilai fungsi, dan residu `eror`. |
+| [`newraph1.py`](newraph1.py) | `newraph(fungsi, a, e)` | Teks ekspresi, nilai awal, toleransi | Newton-Raphson; menghitung turunan `f'(x)` secara simbolik. Data iterasi mencakup `x_baru`, `f(x_baru)`, `f'(x_baru)`, dan residu `eror`. |
+| [`secant1.py`](secant1.py) | `secant(fungsi, a, b, e)` | Teks ekspresi, dua nilai awal, toleransi | Secant; data iterasi mencakup `x_baru`, `f(x_baru)`, dan residu `eror`. |
 
-For example, a solver can be called directly:
+Contoh pemanggilan solver secara langsung:
 
 ```python
 import biseksi2
 
-root, iterations = biseksi2.biseksi("x**2 - 2", 1, 2, 1e-6)
-print(root)
-print(iterations[-1] if iterations else "The initial endpoint was already a root")
+akar, iterasi = biseksi2.biseksi("x**2 - 2", 1, 2, 1e-6)
+print(akar)
+print(iterasi[-1] if iterasi else "Salah satu batas awal sudah merupakan akar")
 ```
 
-The returned history can be empty when an interval endpoint is already an exact root. Newton-Raphson does not perform the same endpoint-root shortcut.
+Riwayat iterasi dapat kosong jika salah satu batas interval sudah merupakan akar eksak. Newton-Raphson tidak memiliki pemeriksaan awal untuk akar pada batas seperti itu.
 
-## Project files
+## Berkas proyek
 
-- [`Norex.py`](Norex.py) — launches the CustomTkinter window, dispatches input to the selected solver, displays the iteration table, and embeds the Matplotlib graph.
-- [`biseksi2.py`](biseksi2.py) — bisection implementation.
-- [`regulaf1.py`](regulaf1.py) — Regula Falsi implementation.
-- [`newraph1.py`](newraph1.py) — Newton-Raphson implementation.
-- [`secant1.py`](secant1.py) — secant implementation.
-- [`requirements.txt`](requirements.txt) — dependency list (see the note above about its current contents).
+- [`Norex.py`](Norex.py) — menjalankan jendela CustomTkinter, meneruskan masukan ke solver yang dipilih, menampilkan tabel iterasi, dan menyematkan grafik Matplotlib.
+- [`biseksi2.py`](biseksi2.py) — implementasi metode biseksi.
+- [`regulaf1.py`](regulaf1.py) — implementasi metode Regula Falsi.
+- [`newraph1.py`](newraph1.py) — implementasi metode Newton-Raphson.
+- [`secant1.py`](secant1.py) — implementasi metode secant.
+- [`requirements.txt`](requirements.txt) — daftar dependensi; lihat catatan tentang isinya di atas.
 
-## Notes and limitations
+## Catatan dan keterbatasan
 
-- The GUI catches common input and expression errors and shows an error dialog. Mathematical convergence is not guaranteed for arbitrary functions or starting values.
-- The implementation uses exact floating-point comparisons for some checks, such as whether a function value is exactly zero.
-- Newton-Raphson can fail when its derivative is zero at an iterate. Regula Falsi and Secant can also encounter a zero denominator for degenerate inputs.
-- Iterations have no hard upper limit, so a non-converging case may continue running.
-- The graph uses the iteration values to choose a plotting interval and evaluates the function over that interval. Functions with poles, discontinuities, complex values, or numerical overflow may not produce a useful plot.
-- The application source contains Indonesian labels and error messages.
+- Antarmuka menampilkan dialog untuk kesalahan masukan dan ekspresi yang umum terjadi. Namun, konvergensi matematis tidak dijamin untuk sembarang fungsi atau nilai awal.
+- Beberapa pemeriksaan menggunakan perbandingan bilangan pecahan secara eksak, misalnya untuk menentukan apakah nilai fungsi tepat sama dengan nol.
+- Newton-Raphson dapat gagal jika turunannya nol pada suatu iterasi. Regula Falsi dan Secant juga dapat menemui penyebut nol pada masukan yang degenerat.
+- Jumlah iterasi tidak dibatasi, sehingga proses yang tidak konvergen dapat terus berjalan.
+- Rentang grafik ditentukan dari nilai iterasi, lalu fungsi dihitung pada rentang tersebut. Fungsi yang memiliki titik singular, diskontinuitas, nilai kompleks, atau luapan numerik mungkin tidak menghasilkan grafik yang berguna.
+- Kode aplikasi masih memuat beberapa label dan pesan kesalahan berbahasa Indonesia.
